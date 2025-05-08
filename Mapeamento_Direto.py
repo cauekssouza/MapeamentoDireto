@@ -2,7 +2,7 @@ import time
 
 class CacheMapeamentoDireto:
     def __init__(self, tamanho_ram=256, tamanho_cache=8, tamanho_bloco=4):
-        self.ram = {i: 0 for i in range(tamanho_ram)}  # Inicializa a RAM
+        self.ram = {i: 0 for i in range(tamanho_ram)} 
         self.cache = [
             {
                 'tag': None,
@@ -42,7 +42,7 @@ class CacheMapeamentoDireto:
         indice, tag, offset = self.calculo_indice_tag_offset(endereco)
         linha = self.cache[indice]
 
-        # Cache Hit
+        
         if linha['valido'] and linha['tag'] == tag:
             self.acessos['hit'] += 1
             print(f"Cache hit! Endereço {endereco}")
@@ -52,7 +52,7 @@ class CacheMapeamentoDireto:
                 linha['sujo'] = True
             return linha['dados'][offset]
 
-        # Cache Miss
+        
         self.acessos['miss'] += 1
         print(f"Cache miss! Endereço {endereco}")
 
@@ -66,14 +66,14 @@ class CacheMapeamentoDireto:
         return self.ram.get(endereco, 0)
 
     def atualizando_cache(self, indice, tag, endereco):
-        # Escreve de volta na RAM se a linha estiver suja
+       
         if self.cache[indice]['sujo']:
             bloco_base = self.cache[indice]['tag'] * len(self.cache) * self.tamanho_bloco
             for i in range(self.tamanho_bloco):
                 if bloco_base + i < self.tamanho_ram:
                     self.ram[bloco_base + i] = self.cache[indice]['dados'][i]
 
-        # Carrega novo bloco da RAM para a Cache
+       
         bloco_inicial = (endereco // self.tamanho_bloco) * self.tamanho_bloco
         dados_bloco = [self.ram.get(i, 0) for i in range(bloco_inicial, bloco_inicial + self.tamanho_bloco) if i < self.tamanho_ram]
 
@@ -117,6 +117,6 @@ try:
 except ValueError as e:
     print(e)
 
-# Calcula e exibe a taxa de acertos
+
 hit_rate = cache.acessos['hit'] / (cache.acessos['hit'] + cache.acessos['miss']) if (cache.acessos['hit'] + cache.acessos['miss']) > 0 else 0
 print(f"Taxa de acertos: {hit_rate:.1%}")
